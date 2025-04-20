@@ -1,6 +1,6 @@
-﻿using PharmaVisitApp.Api.Entities.Interfaces;
+﻿using PharmaVisitApp.Api.Domain.Interfaces;
 
-namespace PharmaVisitApp.Api.Entities.Services
+namespace PharmaVisitApp.Api.Domain.Services
 {
     public class TokenService : ITokenService
     {

@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
-using PharmaVisitApp.Api.Entities.Entities;
-using PharmaVisitApp.Api.Entities.Interfaces;
+using PharmaVisitApp.Api.Domain.Entities;
+using PharmaVisitApp.Api.Domain.Interfaces;
 using PharmaVisitApp.Api.Models;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -32,7 +32,7 @@ namespace PharmaVisitApp.Api.Controllers
                 return Ok(new { Token = token });
             }
 
-            return Unauthorized();
+            return NotFound();
         }
 
         private string GenerateJwtToken(User user)
@@ -43,14 +43,14 @@ namespace PharmaVisitApp.Api.Controllers
                 new Claim(ClaimTypes.NameIdentifier, user.Id.ToString())
             };
 
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("your_secret_key_here"));
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
             var token = new JwtSecurityToken(
                 issuer: "your_issuer",
                 audience: "your_audience",
                 claims: claims,
-                expires: DateTime.Now.AddMinutes(30),
+                expires: DateTime.Now.AddMinutes(1),
                 signingCredentials: creds
             );
 

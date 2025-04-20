@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using PharmaVisitApp.Api.Entities.Entities;
+using PharmaVisitApp.Api.Domain.Entities;
 
 namespace PharmaVisitApp.Api.Infrastructre.Configuration
 {

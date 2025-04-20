@@ -1,5 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using PharamaVisitApp.Handlers;
+using PharamaVisitApp.Services;
 
 namespace PharamaVisitApp
 {
@@ -14,6 +16,10 @@ namespace PharamaVisitApp
                 {
                     fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
                 });
+
+            builder.Services.AddTransient<AuthHandler>();
+            builder.Services.AddTransient<ApiService>();
+
 
             builder.Services.AddScoped(sp => new HttpClient
             {

@@ -1,4 +1,4 @@
-﻿namespace PharmaVisitApp.Api.Entities.Interfaces
+﻿namespace PharmaVisitApp.Api.Domain.Interfaces
 {
     public interface ITokenService
     {

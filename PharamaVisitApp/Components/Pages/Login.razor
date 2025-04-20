@@ -1,22 +1,20 @@
 ﻿@page "/login"
+@using PharamaVisitApp.Services
 @inject HttpClient Http
 @inject NavigationManager Navigation
+@inject ApiService ApiService
 
 <div class="container mt-3" style="max-width: 400px;">
     <EditForm Model="@loginModel" OnValidSubmit="@HandleLogin">
-        <DataAnnotationsValidator />
-        <ValidationSummary />
 
         <div class="form-group mb-3">
             <label>Username</label>
             <InputText class="form-control" @bind-Value="loginModel.Username" />
-            <ValidationMessage For="@(() => loginModel.Username)" />
         </div>
 
         <div class="form-group mb-3">
             <label>Password</label>
             <InputText class="form-control" @bind-Value="loginModel.Password" type="password" />
-            <ValidationMessage For="@(() => loginModel.Password)" />
         </div>
 
         <button class="btn btn-primary w-100" type="submit">Login</button>
@@ -34,41 +32,32 @@
 
     private async Task HandleLogin()
     {
-        try
+        // Validation des champs
+        if (string.IsNullOrEmpty(loginModel.Username))
         {
-            var response = await Http.PostAsJsonAsync("auth/login", loginModel);
-
-            if (response.IsSuccessStatusCode)
-            {
-                var result = await response.Content.ReadFromJsonAsync<JwtResponse>();
-                await SecureStorage.SetAsync("jwt_token", result!.Token);
-                Navigation.NavigateTo("/");
-            }
-            else
-            {
-                var error = await response.Content.ReadFromJsonAsync<ApiError>();
-                errorMessage = error?.Message ?? "Username ou mot de passe invalid.";
-            }
+            errorMessage = "Username requis.";
+            return;
         }
-        catch (Exception ex)
+        if (string.IsNullOrEmpty(loginModel.Password))
         {
-            errorMessage = "Login failed: " + ex.Message;
-        }
-    }
+            errorMessage = "Mot de passe requis.";
+            return;
+        }   
 
-    public class ApiError
-    {
-        public string Message { get; set; }
+        var result = await ApiService.LoginAsync(loginModel.Username, loginModel.Password);
+        if (!result.Success)
+        {
+            errorMessage = result.Message;
+            return;
+        }
+
+        await SecureStorage.SetAsync("auth_token", result.Token);
+        Navigation.NavigateTo("/home", forceLoad: true);
     }
 
     public class LoginModel
     {    
-        public string Username { get; set; }
-        public string Password { get; set; }
-    }
-
-    public class JwtResponse
-    {
-        public string Token { get; set; }
+        public string? Username { get; set; }
+        public string? Password { get; set; }
     }
 }

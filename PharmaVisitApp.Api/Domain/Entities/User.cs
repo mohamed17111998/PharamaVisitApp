@@ -1,6 +1,6 @@
-﻿using PharmaVisitApp.Api.Entities.Interfaces;
+﻿using PharmaVisitApp.Api.Domain.Interfaces;
 
-namespace PharmaVisitApp.Api.Entities.Entities
+namespace PharmaVisitApp.Api.Domain.Entities
 {
     public class User : IAuditUser
     {
@@ -9,7 +9,7 @@ namespace PharmaVisitApp.Api.Entities.Entities
 
         }
         public User(string username, string lastName, string firstName, string email, string? phoneNumber, bool? validatedPlan,
-            bool? isValidatedPlan, string passwordSalt, string passwordHash, string? adConnect, Guid profileId, Guid? responsableId, bool isActive, List<Geo> geos)
+            bool? isValidatedPlan, byte[] passwordSalt, byte[] passwordHash, bool adConnect, Guid profileId, Guid? responsableId, bool isActive, List<Geo> geos)
         {
             Id = Guid.NewGuid();
             Username = username;
@@ -26,13 +26,15 @@ namespace PharmaVisitApp.Api.Entities.Entities
             ResponsableId = responsableId;
             Geos = geos;
             IsActive = isActive;
-            CreatedBy = username;
 
             // Audit
             CreatedAt = DateTime.Now;
+            CreatedBy = username;
             ModifiedAt = DateTime.Now;
             ModifiedBy = username;
         }
+
+        #region Propreties
         public Guid Id { get; private set; }
         public string Username { get; private set; }
         public string LastName { get; private set; }
@@ -41,9 +43,9 @@ namespace PharmaVisitApp.Api.Entities.Entities
         public string? PhoneNumber { get; private set; }
         public bool? ValidatedPlan { get; private set; }
         public bool? IsValidatedPlan { get; private set; }
-        public string PasswordSalt { get; private set; }
-        public string PasswordHash { get; private set; }
-        public string? AdConnect { get; private set; }
+        public byte[] PasswordSalt { get; private set; }
+        public byte[] PasswordHash { get; private set; }
+        public bool? AdConnect { get; private set; }
         public Guid ProfileId { get; private set; }
         public Guid? ResponsableId { get; private set; }
         public bool IsActive { get; private set; }
@@ -52,5 +54,6 @@ namespace PharmaVisitApp.Api.Entities.Entities
         public DateTime? ModifiedAt { get; set; }
         public string? ModifiedBy { get; set; }
         public ICollection<Geo> Geos { get; private set; }
+        #endregion
     }
 }

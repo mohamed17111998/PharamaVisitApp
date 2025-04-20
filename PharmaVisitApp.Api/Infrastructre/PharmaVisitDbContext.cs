@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using PharmaVisitApp.Api.Entities.Entities;
+using PharmaVisitApp.Api.Domain.Entities;
 
 namespace PharmaVisitApp.Api.Infrastructre
 {
@@ -16,18 +16,14 @@ namespace PharmaVisitApp.Api.Infrastructre
             builder.ApplyConfigurationsFromAssembly(typeof(PharmaVisitDbContext).Assembly);
             base.OnModelCreating(builder);
         }
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            if (!optionsBuilder.IsConfigured)
-            {
-                optionsBuilder.UseSqlServer(
-                    "Server=.;Database=PharmaVisit;Trusted_Connection=True;TrustServerCertificate=True;",
-                    sqlOptions => sqlOptions.EnableRetryOnFailure()
-                );
-            }
-        }
         public DbSet<User> Users { get; set; }
         public DbSet<Profile> Profiles { get; set; }
         public DbSet<Geo> Geos { get; set; }
+        public DbSet<Cycle> Cycles { get; set; }
+        public DbSet<MenuItem> MenuItems { get; set; }
+        public DbSet<Pharmacie> Pharmacies { get; set; }
+        public DbSet<Planification> Planifications { get; set; }
+        public DbSet<PharmaLog> PharmaLogs { get; set; }
+        public DbSet<Visite> Visites { get; set; }
     }
 }

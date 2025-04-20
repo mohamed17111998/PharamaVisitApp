@@ -1,4 +1,4 @@
-﻿namespace PharmaVisitApp.Api.Entities.Entities
+﻿namespace PharmaVisitApp.Api.Domain.Entities
 {
     public class Profile
     {
@@ -12,8 +12,11 @@
             Reference = reference;
             Label = label;
         }
+
+        #region Propreties
         public Guid Id { get; private set; }
         public string Reference { get; private set; }
         public string Label { get; private set; }
+        #endregion
     }
 }

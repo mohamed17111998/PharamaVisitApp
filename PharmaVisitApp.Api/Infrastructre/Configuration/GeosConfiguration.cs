@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using PharmaVisitApp.Api.Entities.Entities;
+using PharmaVisitApp.Api.Domain.Entities;
 
 namespace PharmaVisitApp.Api.Infrastructre.Configuration
 {
@@ -11,7 +11,7 @@ namespace PharmaVisitApp.Api.Infrastructre.Configuration
             builder.HasKey(x => x.Id);
             builder.Property(x => x.Id).ValueGeneratedNever();
             builder.Property(x => x.UG).IsRequired(true).HasMaxLength(255);
-            builder.Property(x => x.CodeIMS).IsRequired(false).HasMaxLength(255);
+            builder.Property(x => x.CodeIMS).IsRequired(false);
             builder.Property(x => x.UGIMS).IsRequired(false).HasMaxLength(255);
         }
     }
