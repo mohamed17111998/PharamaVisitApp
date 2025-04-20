@@ -26,6 +26,12 @@ namespace PharmaVisitApp.Api.Entities.Entities
             ResponsableId = responsableId;
             Geos = geos;
             IsActive = isActive;
+            CreatedBy = username;
+
+            // Audit
+            CreatedAt = DateTime.Now;
+            ModifiedAt = DateTime.Now;
+            ModifiedBy = username;
         }
         public Guid Id { get; private set; }
         public string Username { get; private set; }

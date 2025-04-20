@@ -16,9 +16,18 @@ namespace PharmaVisitApp.Api.Infrastructre
             builder.ApplyConfigurationsFromAssembly(typeof(PharmaVisitDbContext).Assembly);
             base.OnModelCreating(builder);
         }
-
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            if (!optionsBuilder.IsConfigured)
+            {
+                optionsBuilder.UseSqlServer(
+                    "Server=.;Database=PharmaVisit;Trusted_Connection=True;TrustServerCertificate=True;",
+                    sqlOptions => sqlOptions.EnableRetryOnFailure()
+                );
+            }
+        }
         public DbSet<User> Users { get; set; }
-        public DbSet<Profile> Profile { get; set; }
+        public DbSet<Profile> Profiles { get; set; }
         public DbSet<Geo> Geos { get; set; }
     }
 }

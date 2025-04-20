@@ -1,11 +1,10 @@
-using Microsoft.EntityFrameworkCore;
 using PharmaVisitApp.Api.Entities.Services;
 using PharmaVisitApp.Api.Infrastructre;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddDbContext<PharmaVisitDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+//builder.Services.AddDbContext<PharmaVisitDbContext>(options =>
+//    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 builder.Services.Inject(); // ajouter mes services a l'injection de dependences
 builder.Services.AddControllers();

@@ -7,6 +7,7 @@ namespace PharmaVisitApp.Api.Infrastructre
     {
         public static IServiceCollection Inject(this IServiceCollection services)
         {
+            services.AddDbContext<PharmaVisitDbContext>();
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<ITokenService, TokenService>();
             services.AddScoped<IProfileService, ProfileService>();

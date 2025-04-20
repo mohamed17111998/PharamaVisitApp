@@ -14,7 +14,7 @@ namespace PharmaVisitApp.Api.Entities.Services
                 var userService = scope.ServiceProvider.GetRequiredService<IUserService>();
                 var dbContext = scope.ServiceProvider.GetRequiredService<PharmaVisitDbContext>();
 
-                User? user = await dbContext.Users.SingleOrDefaultAsync(x => x.Username == "admin");
+                User? user = await dbContext.Users.FirstOrDefaultAsync(x => x.Username == "admin");
                 if(user == null) await userService.CreateAdmin();
             }
         }
