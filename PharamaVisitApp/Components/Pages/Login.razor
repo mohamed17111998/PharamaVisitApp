@@ -1,0 +1,90 @@
+﻿@page "/login"
+
+@inject HttpClient Http
+@inject NavigationManager Navigation
+
+
+<EditForm Model="@loginModel" OnValidSubmit="HandleLogin">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <h2 class="mb-4 text-center">Login</h2>
+            <form method="post">
+                <div class="form-group mb-3">
+                    <label>Username:</label>
+                    <InputText @bind-Value="loginModel.Username" class="form-control" placeholder="Enter l'username" />
+                    <span asp-validation-for="LoginViewModel.Email" class="text-danger"></span>
+                </div>
+
+                <div class="form-group mb-3">
+                     <label>Mot de passe:</label>
+                    <InputText @bind-Value="loginModel.Password" type="password" class="form-control" placeholder="Enter le mot passe" />
+                    <span asp-validation-for="LoginViewModel.Password" class="text-danger"></span>
+                </div>
+
+                <button type="submit" class="btn btn-primary w-100">Login</button>
+            </form>
+
+                @if (loginFailed)
+                {
+                        <div class="alert alert-danger mt-3">
+                            Invalid credentials. Please try again.
+                        </div>
+                }
+        </div>
+    </div>
+</div>
+
+</EditForm>
+
+
+@code {
+    private LoginModel loginModel = new();
+    private bool loginFailed = false;
+
+    private async Task HandleLogin()
+    {
+        try
+        {
+            // Send login data to the backend API
+            var response = await Http.PostAsJsonAsync("https://localhost:41393/api/auth/login", loginModel);
+
+            if (response.IsSuccessStatusCode)
+            {
+                // Deserialize the response to get the token
+                var result = await response.Content.ReadFromJsonAsync<TokenResponse>();
+
+                if (result?.Token != null)
+                {
+                    Navigation.NavigateTo("/home");
+                }
+                else
+                {
+                    loginFailed = true;
+                }
+            }
+            else
+            {
+                loginFailed = true;
+            }
+        }
+        catch (Exception ex)
+        {
+            loginFailed = true;  // Handle errors (e.g., network issues)
+        }
+    }
+
+    public class LoginModel
+    {
+        public string Username { get; set; }
+        public string Password { get; set; }
+    }
+
+    public class TokenResponse
+    {
+        public string Token { get; set; }
+    }
+}
