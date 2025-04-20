@@ -1,89 +1,73 @@
 ﻿@page "/login"
-
 @inject HttpClient Http
 @inject NavigationManager Navigation
 
+<div class="container mt-3" style="max-width: 400px;">
+    <EditForm Model="@loginModel" OnValidSubmit="@HandleLogin">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
 
-<EditForm Model="@loginModel" OnValidSubmit="HandleLogin">
-    <DataAnnotationsValidator />
-    <ValidationSummary />
-
-    <div class="container mt-5">
-    <div class="row justify-content-center">
-        <div class="col-md-6">
-            <h2 class="mb-4 text-center">Login</h2>
-            <form method="post">
-                <div class="form-group mb-3">
-                    <label>Username:</label>
-                    <InputText @bind-Value="loginModel.Username" class="form-control" placeholder="Enter l'username" />
-                    <span asp-validation-for="LoginViewModel.Email" class="text-danger"></span>
-                </div>
-
-                <div class="form-group mb-3">
-                     <label>Mot de passe:</label>
-                    <InputText @bind-Value="loginModel.Password" type="password" class="form-control" placeholder="Enter le mot passe" />
-                    <span asp-validation-for="LoginViewModel.Password" class="text-danger"></span>
-                </div>
-
-                <button type="submit" class="btn btn-primary w-100">Login</button>
-            </form>
-
-                @if (loginFailed)
-                {
-                        <div class="alert alert-danger mt-3">
-                            Invalid credentials. Please try again.
-                        </div>
-                }
+        <div class="form-group mb-3">
+            <label>Username</label>
+            <InputText class="form-control" @bind-Value="loginModel.Username" />
+            <ValidationMessage For="@(() => loginModel.Username)" />
         </div>
-    </div>
+
+        <div class="form-group mb-3">
+            <label>Password</label>
+            <InputText class="form-control" @bind-Value="loginModel.Password" type="password" />
+            <ValidationMessage For="@(() => loginModel.Password)" />
+        </div>
+
+        <button class="btn btn-primary w-100" type="submit">Login</button>
+
+        @if (!string.IsNullOrEmpty(errorMessage))
+        {
+            <div class="alert alert-danger mt-3">@errorMessage</div>
+        }
+    </EditForm>
 </div>
-
-</EditForm>
-
 
 @code {
     private LoginModel loginModel = new();
-    private bool loginFailed = false;
+    private string? errorMessage;
 
     private async Task HandleLogin()
     {
         try
         {
-            // Send login data to the backend API
-            var response = await Http.PostAsJsonAsync("https://localhost:41393/api/auth/login", loginModel);
+            var response = await Http.PostAsJsonAsync("auth/login", loginModel);
 
             if (response.IsSuccessStatusCode)
             {
-                // Deserialize the response to get the token
-                var result = await response.Content.ReadFromJsonAsync<TokenResponse>();
-
-                if (result?.Token != null)
-                {
-                    Navigation.NavigateTo("/home");
-                }
-                else
-                {
-                    loginFailed = true;
-                }
+                var result = await response.Content.ReadFromJsonAsync<JwtResponse>();
+                await SecureStorage.SetAsync("jwt_token", result!.Token);
+                Navigation.NavigateTo("/");
             }
             else
             {
-                loginFailed = true;
+                var error = await response.Content.ReadFromJsonAsync<ApiError>();
+                errorMessage = error?.Message ?? "Username ou mot de passe invalid.";
             }
         }
         catch (Exception ex)
         {
-            loginFailed = true;  // Handle errors (e.g., network issues)
+            errorMessage = "Login failed: " + ex.Message;
         }
     }
 
-    public class LoginModel
+    public class ApiError
     {
+        public string Message { get; set; }
+    }
+
+    public class LoginModel
+    {    
         public string Username { get; set; }
         public string Password { get; set; }
     }
 
-    public class TokenResponse
+    public class JwtResponse
     {
         public string Token { get; set; }
     }
