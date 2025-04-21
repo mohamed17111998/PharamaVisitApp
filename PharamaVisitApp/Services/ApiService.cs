@@ -25,10 +25,11 @@ namespace PharamaVisitApp.Services
             var response = await _httpClient.PostAsync("auth/login", content);
 
             // a revoir les messages d'erreurs
-            if(response.StatusCode == System.Net.HttpStatusCode.NotFound)
+            if (response.StatusCode == System.Net.HttpStatusCode.NotFound)
                 return new UserLoginDto { Success = false, Message = "Utilisateur introuvable." };
 
             var token = await response.Content.ReadAsStringAsync();
+            await SecureStorage.SetAsync("auth_token", token);
 
             return new UserLoginDto
             {

@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Logging;
 using PharamaVisitApp.Handlers;
 using PharamaVisitApp.Services;
+using System.Net.Http.Headers;
 
 namespace PharamaVisitApp
 {
@@ -19,12 +20,15 @@ namespace PharamaVisitApp
 
             builder.Services.AddTransient<AuthHandler>();
             builder.Services.AddTransient<ApiService>();
+            builder.Services.AddTransient<AuthService>();
 
 
-            builder.Services.AddScoped(sp => new HttpClient
+            builder.Services.AddHttpClient("PharmacieVisitClient", client =>
             {
-                BaseAddress = new Uri("https://localhost:1000/api/")
-            });
+                client.BaseAddress = new Uri("https://localhost:1000/api/");
+                client.DefaultRequestHeaders.Accept.Clear();
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+            }).AddHttpMessageHandler<AuthHandler>();
 
             builder.Services.AddMauiBlazorWebView();
 

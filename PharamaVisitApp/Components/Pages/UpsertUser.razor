@@ -1,0 +1,98 @@
+﻿@page "/user/upsert"
+@using System.ComponentModel.DataAnnotations
+@inject NavigationManager Navigation
+
+<EditForm Model="@user" OnValidSubmit="@HandleValidSubmit">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <div class="row g-3">
+        <div class="col-md-6">
+            <label for="username" class="form-label">Username</label>
+            <InputText id="username" class="form-control" @bind-Value="user.Username" />
+            <ValidationMessage For="@(() => user.Username)" />
+        </div>
+
+        <div class="col-md-6">
+            <label for="firstname" class="form-label">Nom</label>
+            <InputText id="firstname" class="form-control" @bind-Value="user.LastName" />
+            <ValidationMessage For="@(() => user.LastName)" />
+        </div>
+
+        <div class="col-md-6">
+            <label for="lastname" class="form-label">Prenom</label>
+            <InputText id="lastname" class="form-control" @bind-Value="user.FirstName" />
+            <ValidationMessage For="@(() => user.FirstName)" />
+        </div>
+
+        <div class="col-md-6">
+            <label for="lastname" class="form-label">Email</label>
+            <InputText id="lastname" class="form-control" @bind-Value="user.Email" />
+            <ValidationMessage For="@(() => user.Email)" />
+        </div>
+
+        <div class="col-md-6">
+            <label for="lastname" class="form-label">Telephone</label>
+            <InputText id="lastname" class="form-control" @bind-Value="user.Phone" />
+            <ValidationMessage For="@(() => user.Phone)" />
+        </div>
+
+        <div class="col-md-6">
+        <select class="form-control">
+            <option value="">Selectionner un profile</option>
+            @foreach (var item in profiles)
+            {
+                <option value="@item">@item</option>
+            }
+        </select>
+        </div>
+
+        <div class="col-md-6">
+            <label for="lastname" class="form-label">Profile</label>
+            <InputText id="lastname" class="form-control" @bind-Value="user.LastName" />
+            <ValidationMessage For="@(() => user.LastName)" />
+        </div>
+
+        <div class="col-md-6">
+            <label for="lastname" class="form-label">Villes</label>
+            <InputText id="lastname" class="form-control" @bind-Value="user.LastName" />
+            <ValidationMessage For="@(() => user.LastName)" />
+        </div>
+
+
+        <div class="col-12 mt-4">
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </div>
+    </div>
+</EditForm>
+
+@code {
+    private UserModel user = new();
+    private List<string> profiles = new List<string> { "DDD", "FDF", "FFF", "SDA" };
+
+    private void HandleValidSubmit()
+    {
+        // Handle the form submission (e.g., send to API, save to DB)
+        Console.WriteLine("Form submitted!");
+        Console.WriteLine($"User: {user.Username}, Email: {user.Email}");
+    }
+
+    public class UserModel
+    {
+        [Required(ErrorMessage = "L'username est requis.")]
+        public string Username { get; set; } = string.Empty;
+
+        [Required(ErrorMessage = "Le prenom est requis.")]
+        public string FirstName { get; set; } = string.Empty;
+
+        [Required(ErrorMessage = "Le nom est requis.")]
+        public string LastName { get; set; } = string.Empty;
+
+        [Phone(ErrorMessage = "Le format du telephone est invalid.")]
+        public string? Phone { get; set; } = string.Empty;
+
+        [Required(ErrorMessage = "L'email est requis.")]
+        [EmailAddress(ErrorMessage = "Le format de l'email est invalid.")]
+        public string Email { get; set; } = string.Empty;
+    }
+}

@@ -1,12 +1,13 @@
-﻿@page "/"
-@using Microsoft.AspNetCore.Authorization
+﻿@page "/user"
 @using PharamaVisitApp.Services
-@inject AuthService AuthService
 @inject NavigationManager Navigation
+@inject AuthService AuthService
 
-<h1>Pharma Visit</h1>
+<h1>User</h1>
 
-@code{
+<a class="btn btn-primary" href="/user/upsert"> Ajouter </a>
+
+@code {
     protected override async Task OnInitializedAsync()
     {
         var token = await AuthService.GetTokenAsync();

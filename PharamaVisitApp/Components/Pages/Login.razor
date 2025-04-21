@@ -21,7 +21,7 @@
 
         @if (!string.IsNullOrEmpty(errorMessage))
         {
-            <div class="alert alert-danger mt-3">@errorMessage</div>
+                <div class="alert alert-danger mt-3">@errorMessage</div>
         }
     </EditForm>
 </div>
@@ -42,7 +42,7 @@
         {
             errorMessage = "Mot de passe requis.";
             return;
-        }   
+        }
 
         var result = await ApiService.LoginAsync(loginModel.Username, loginModel.Password);
         if (!result.Success)
@@ -51,12 +51,11 @@
             return;
         }
 
-        await SecureStorage.SetAsync("auth_token", result.Token);
-        Navigation.NavigateTo("/home", forceLoad: true);
+        Navigation.NavigateTo("/", forceLoad: true);
     }
 
     public class LoginModel
-    {    
+    {
         public string? Username { get; set; }
         public string? Password { get; set; }
     }

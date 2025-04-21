@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.OpenApi.Models;
 using PharmaVisitApp.Api.Domain.Helpers;
 using PharmaVisitApp.Api.Infrastructre;
 
@@ -7,7 +8,11 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.Inject(builder.Configuration); // ajouter mes services a l'injection de dependences
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+
+builder.Services.AddSwaggerGen(c =>
+{
+    c.SwaggerDoc("v1", new OpenApiInfo { Title = "PharmaAppClient", Version = "v1" });
+});
 
 var app = builder.Build();
 
